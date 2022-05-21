@@ -309,6 +309,66 @@ class Member extends REST_Controller
       $result = $this->Member_model->countParentId_Id($this->input->post('sponsor_id',true));
       $this->response(['status'=>true,'data'=>$result,'msg'=>'successfully','response_code' => REST_Controller::HTTP_OK]);
     }
+
+
+    public function verify_mobile_post()
+    {
+        if($this->input->post('mobile',true)=='')
+        {
+             $this->response(['status'=>false,'data'=>[],'msg'=>'mobile required !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+        }else
+        {
+            $num_rows = $this->Member_model->verifyRegisterMobileExist($this->input->post('mobile',true));
+            if($num_rows>0)
+            {
+                $this->response(['status'=>false,'data'=>[],'msg'=>'mobile already exist !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+            }else
+            {
+                $this->response(['status'=>true,'data'=>[],'msg'=>'Successfully verified !','response_code' => REST_Controller::HTTP_OK]);
+            } 
+        }
+        
+    }
+
+    public function verify_email_post()
+    {
+        if($this->input->post('email',true)=='')
+        {
+             $this->response(['status'=>false,'data'=>[],'msg'=>'email required !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+        }else
+        {
+            $num_rows = $this->Member_model->verifyRegisterEmailExist($this->input->post('email',true));
+            if($num_rows>0)
+            {
+                $this->response(['status'=>false,'data'=>[],'msg'=>'email already exist !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+            }else
+            {
+                $this->response(['status'=>true,'data'=>[],'msg'=>'Successfully verified !','response_code' => REST_Controller::HTTP_OK]);
+            } 
+        }
+        
+    }
+
+    public function verify_member_post()
+    {
+        if($this->input->post('member_id',true)=='')
+        {
+             $this->response(['status'=>false,'data'=>[],'msg'=>'member_id required !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+        }else
+        {
+            $num_rows = $this->Member_model->verifyRegisterMemberExist($this->input->post('member_id',true));
+            if($num_rows>0)
+            {
+                $this->response(['status'=>true,'data'=>[],'msg'=>'Successfully verified !','response_code' => REST_Controller::HTTP_OK]);
+            }else
+            {
+                $this->response(['status'=>false,'data'=>[],'msg'=>'Invalid member Id !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+            } 
+        }
+        
+    }
+
+
     
 
 

@@ -10,8 +10,59 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
         }
         public function verifyRegisterExist($mobile_no,$email_id)
         {
-        return $this->db->select('id')->from('tbl_registration_master')->where(['mobile_no'=>$mobile_no,'email_id'=>$email_id,'status'=>1])->get()->num_rows();
+            $qry = $this->db->query("select count(id) as total from tbl_registration_master where (mobile_no = ? OR email_id = ?) and status = 1",[$mobile_no,$email_id]);
+            $result = $qry->result_array();
+            if(!empty($result))
+            {
+                return $result[0]['total'];
+            }else
+            {
+                return 0;
+            }
         }
+
+
+         public function verifyRegisterMobileExist($mobile_no)
+        {
+            $qry = $this->db->query("select count(id) as total from tbl_registration_master where (mobile_no = ?) and status = 1",[$mobile_no]);
+            $result = $qry->result_array();
+            if(!empty($result))
+            {
+                return $result[0]['total'];
+            }else
+            {
+                return 0;
+            }
+        }
+
+        public function verifyRegisterEmailExist($email_id)
+        {
+            $qry = $this->db->query("select count(id) as total from tbl_registration_master where (email_id = ?) and status = 1",[$email_id]);
+            $result = $qry->result_array();
+            if(!empty($result))
+            {
+                return $result[0]['total'];
+            }else
+            {
+                return 0;
+            }
+        }
+
+
+        public function verifyRegisterMemberExist($member_id)
+        {
+            $qry = $this->db->query("select count(id) as total from tbl_registration_master where (member_id = ?) and status = 1",[$member_id]);
+            $result = $qry->result_array();
+            if(!empty($result))
+            {
+                return $result[0]['total'];
+            }else
+            {
+                return 0;
+            }
+        }
+
+
         public function getNewId()
         {
             $lastid="";
