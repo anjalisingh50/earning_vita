@@ -150,10 +150,6 @@ class Member extends REST_Controller
     if($this->input->post('name',true)=='')
       {
          $this->response(['status'=>false,'data'=>[],'msg'=>'name required !','response_code'=>REST_Controller::HTTP_BAD_REQUEST]);
-      }elseif($this->input->post('email_id',true)=='')
-      {
-         $this->response(['status'=>false,'data'=>[],'msg'=>'email_id required !',
-            'response_code'=>REST_Controller::HTTP_BAD_REQUEST]);
       }elseif($this->input->post('f_h_name',true)=='')
       {
         $this->response(['status'=>false,'data'=>[],'msg'=>'f_h_name required !',
@@ -165,14 +161,6 @@ class Member extends REST_Controller
       }elseif($this->input->post('gender',true)=='')
       {
         $this->response(['status'=>false,'data'=>[],'msg'=>'gender required !',
-            'response_code'=>REST_Controller::HTTP_BAD_REQUEST]); 
-      }elseif($this->input->post('sponsor_id',true)=='')
-      {
-        $this->response(['status'=>false,'data'=>[],'msg'=>'sponsor_id required !',
-            'response_code'=>REST_Controller::HTTP_BAD_REQUEST]); 
-      }elseif($this->input->post('side',true)=='')
-      {
-        $this->response(['status'=>false,'data'=>[],'msg'=>'side required !',
             'response_code'=>REST_Controller::HTTP_BAD_REQUEST]); 
       }elseif($this->input->post('country',true)=='')
       {
@@ -190,73 +178,48 @@ class Member extends REST_Controller
       {
         $this->response(['status'=>false,'data'=>[],'msg'=>'pin required !',
             'response_code'=>REST_Controller::HTTP_BAD_REQUEST]);
-      }elseif($this->input->post('registration_date',true)=='')
-      {
-        $this->response(['status'=>false,'data'=>[],'msg'=>'registration_date required !',
-            'response_code'=>REST_Controller::HTTP_BAD_REQUEST]);
-      }elseif($this->input->post('activation_date',true)=='')
-      {
-        $this->response(['status'=>false,'data'=>[],'msg'=>'activation_date required !',
-            'response_code'=>REST_Controller::HTTP_BAD_REQUEST]);
-      }elseif($this->input->post('expiry_date',true)=='')
-      {
-        $this->response(['status'=>false,'data'=>[],'msg'=>'expiry_date required !',
-            'response_code'=>REST_Controller::HTTP_BAD_REQUEST]);
       }elseif($this->input->post('address',true)=='')
       {
         $this->response(['status'=>false,'data'=>[],'msg'=>'address required !',
+            'response_code'=>REST_Controller::HTTP_BAD_REQUEST]);
+      }elseif($this->input->post('member_id',true)=='')
+      {
+        $this->response(['status'=>false,'data'=>[],'msg'=>'member_id required !',
+            'response_code'=>REST_Controller::HTTP_BAD_REQUEST]);
+      }elseif($this->input->post('d_by',true)=='')
+      {
+        $this->response(['status'=>false,'data'=>[],'msg'=>'d_by required !',
             'response_code'=>REST_Controller::HTTP_BAD_REQUEST]);
       }
       else{
 
          try{
-            $num_rows = $this->Member_model->verifyRegisterExist($this->input->post('mobile',true),$this->input->post('email_id',true));
+               $num_rows = $this->Member_model->verifyRegisterMobileUpdateExist($this->input->post('mobile',true),$this->input->post('member_id',true));
                 if($num_rows>0)
                {
-                  $this->response(['status'=>false,'data'=>[],'msg'=>'mobile or email already exist !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
-                } 
-                $number_rows = $this->Member_model->countSponser_Id($this->input->post('sponsor_id',true));
-                
-                if($number_rows==1)
-
-                {
+                  $this->response(['status'=>false,'data'=>[],'msg'=>'mobile already exist !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+               }else
+               {
                   $dataArray=[];
-                  if (isset($_POST['photo']) && !empty($_POST['photo'])) 
-                  {
-                           $photo_incoded = $this->input->post('photo',true);
-                           // $inside_image = str_replace(' ', '+', $inside_image_incoded);
-                           $imageData = base64_decode($photo_incoded);
-                           $photo = uniqid() . '.jpg';
-
-                     $photo_file = '../all-uploaded-img/img/' . $photo;
-                     $success = file_put_contents(APPPATH . $photo_file, $imageData);
-                     $dataArray['photo'] = $photo;
-                  }
                   $dataArray['name'] = $this->input->post('name',true);
                   $dataArray['email_id'] = $this->input->post('email_id',true);
                   $dataArray['f_h_name'] = $this->input->post('f_h_name',true);
                   $dataArray['mobile_no'] = $this->input->post('mobile_no',true);
                   $dataArray['gender'] = $this->input->post('gender',true);
-                  $dataArray['sponsor_id'] = $this->input->post('sponsor_id',true);
-                  $dataArray['side'] = $this->input->post('side',true);
                   $dataArray['title'] = $this->input->post('title',true);
                   $dataArray['country'] = $this->input->post('country',true);
                   $dataArray['state'] = $this->input->post('state',true);
                   $dataArray['city'] = $this->input->post('city',true);
                   $dataArray['address'] = $this->input->post('address',true);
                   $dataArray['pin'] = $this->input->post('pin',true);
-                  $dataArray['registration_date'] = date('Y-m-d', strtotime($this->input->post('registration_date',true)));
-                  $dataArray['activation_date'] = date('Y-m-d', strtotime($this->input->post('activation_date',true)));
-                  $dataArray['expiry_date'] = date('Y-m-d', strtotime($this->input->post('expiry_date',true)));
                   $dataArray['d_by'] = $this->input->post('d_by',true);
                   $dataArray['d_date'] = date('Y-m-d H:i:s');
-                  $dataArray['status'] = 1;
-                  $this->Member_model->updateUser($dataArray,['id'=>$this->input->post('id',true)]);
-                  $this->response(['status'=>true,'data'=>$dataArray,'msg'=>'successfully Updated','response_code' => REST_Controller::HTTP_OK]); 
-                }else
-                  {
-                   $this->response(['status'=>false,'data'=>[],'msg'=>'sponser_id not exist !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
-                 }
+
+                  $this->Member_model->updateUser($dataArray,['member_id'=>$this->input->post('member_id',true),'status'=>1]);
+
+                  $this->response(['status'=>true,'data'=>[],'msg'=>'successfully Updated','response_code' => REST_Controller::HTTP_OK]); 
+               } 
+                
                 
             }catch(Exception $e)
             {
@@ -293,20 +256,52 @@ class Member extends REST_Controller
     }
     public function deleteRegister_post()
     {
-        if($this->input->post('id',true)=='')
+        if($this->input->post('member_id',true)=='')
         {
-            $this->response(['status'=>false,'data'=>[],'msg'=>'id required !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+            $this->response(['status'=>false,'data'=>[],'msg'=>'member_id required !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+        }if($this->input->post('d_by',true)=='')
+        {
+            $this->response(['status'=>false,'data'=>[],'msg'=>'d_by required !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
         }else
         {
 
             try{
                $dataArray = [];
-               $dataArray['id'] = $this->input->post('id',true);
                $dataArray['d_by'] = $this->input->post('d_by');
                $dataArray['d_date'] = date('Y-m-d H:i:s');
                $dataArray['status'] = 0;
-                $this->Member_model->deleteRegister($dataArray,['id'=>$this->input->post('id',true)]);
-                $this->response(['status'=>true,'data'=>$dataArray,'msg'=>'successfully deleted','response_code' => REST_Controller::HTTP_OK]);
+                $this->Member_model->modifyRegister($dataArray,['member_id'=>$this->input->post('member_id',true)]);
+                $this->response(['status'=>true,'data'=>[],'msg'=>'successfully deleted','response_code' => REST_Controller::HTTP_OK]);
+                
+            }catch(Exception $e)
+            {
+                $this->response(['status'=>false,'data'=>[],'msg'=>'something went wrong !','response_code' => REST_Controller::HTTP_INTERNAL_SERVER_ERROR]);
+            }
+
+        }
+    }
+
+    public function blockUnblockedRegister_post()
+    {
+        if($this->input->post('member_id',true)=='')
+        {
+            $this->response(['status'=>false,'data'=>[],'msg'=>'member_id required !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+        }if($this->input->post('d_by',true)=='')
+        {
+            $this->response(['status'=>false,'data'=>[],'msg'=>'d_by required !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+        }if($this->input->post('status',true)=='')
+        {
+            $this->response(['status'=>false,'data'=>[],'msg'=>'status required !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+        }else
+        {
+
+            try{
+               $dataArray = [];
+               $dataArray['d_by'] = $this->input->post('d_by');
+               $dataArray['d_date'] = date('Y-m-d H:i:s');
+               $dataArray['block_status'] = $this->input->post('status',true);
+                $this->Member_model->modifyRegister($dataArray,['member_id'=>$this->input->post('member_id',true)]);
+                $this->response(['status'=>true,'data'=>[],'msg'=>'successfully updated','response_code' => REST_Controller::HTTP_OK]);
                 
             }catch(Exception $e)
             {
@@ -380,6 +375,29 @@ class Member extends REST_Controller
         }
         
     }
+
+    public function verify_update_mobile_post()
+    {
+        if($this->input->post('mobile',true)=='')
+        {
+             $this->response(['status'=>false,'data'=>[],'msg'=>'mobile required !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+        }if($this->input->post('member_id',true)=='')
+        {
+             $this->response(['status'=>false,'data'=>[],'msg'=>'member_id required !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+        }else
+        {
+            $num_rows = $this->Member_model->verifyRegisterMobileUpdateExist($this->input->post('mobile',true),$this->input->post('member_id',true));
+            if($num_rows>0)
+            {
+                $this->response(['status'=>false,'data'=>[],'msg'=>'mobile already exist !','response_code' => REST_Controller::HTTP_BAD_REQUEST]);
+            }else
+            {
+                $this->response(['status'=>true,'data'=>[],'msg'=>'Successfully verified !','response_code' => REST_Controller::HTTP_OK]);
+            } 
+        }
+        
+    }
+
 
 
     

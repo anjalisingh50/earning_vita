@@ -62,6 +62,19 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
             }
         }
 
+        public function verifyRegisterMobileUpdateExist($mobile_no,$member_id)
+        {
+            $qry = $this->db->query("select count(id) as total from tbl_registration_master where member_id!= ? and mobile_no = ? and status = 1 ",[$member_id,$mobile_no]);
+            $result = $qry->result_array();
+            if(!empty($result))
+            {
+                return $result[0]['total'];
+            }else
+            {
+                return 0;
+            }
+        }
+
 
         public function getNewId()
         {
@@ -148,7 +161,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
        }
 
 
-       public function deleteRegister($data,$where)
+       public function modifyRegister($data,$where)
         {
             return $this->db->update('tbl_registration_master',$data,$where);
         }
