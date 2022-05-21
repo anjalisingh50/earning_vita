@@ -122,12 +122,32 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
            // echo $this->db->last_query();die;
        }
 
-       public function getRegisterData($regId)
+       public function getRegisterData($member_id,$page=1,$limit=10)
        {
-            if($regId!="")
-                    $this->db->where('id',$regId);
-            return $this->db->select('*')->from('tbl_registration_master')->where(['status'=>1])->get()->result_array();
+
+            $base_url = base_url().'all-uploaded-img/img/';
+            if($member_id!="")
+                    $this->db->where('member_id',$member_id);
+            $offset = $page*$limit - $limit; 
+            
+            return $this->db->select("member_id,parent_id,side,sponsor_id,title,name,gender,f_h_name,country,state,city,address,pin,mobile_no,email_id,kyc_status,registration_date,CONCAT('$base_url',photo) as photo,role_type")
+                ->from('tbl_registration_master')
+                ->where(['status'=>1])
+                ->limit($limit,$offset)->get()->result_array();
        }
+
+       public function getRegisterDataCount($member_id)
+       {
+            if($member_id!="")
+                    $this->db->where('member_id',$member_id);
+            $result = $this->db->select("count(id) as total")
+                ->from('tbl_registration_master')
+                ->where(['status'=>1])
+                ->get()->result_array();
+            return $result[0]['total'];
+       }
+
+
        public function deleteRegister($data,$where)
         {
             return $this->db->update('tbl_registration_master',$data,$where);

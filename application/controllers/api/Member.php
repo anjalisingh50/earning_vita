@@ -270,9 +270,22 @@ class Member extends REST_Controller
    public function getRegisterData_post()
     {
         try{
-            $regId = $this->input->post('id',true)!=""?$this->input->post('id',true):"";
-            $result = $this->Member_model->getRegisterData($regId);
-            $this->response(['status'=>true,'data'=>$result,'msg'=>'successfully','response_code' => REST_Controller::HTTP_OK]);
+            $member_id = $this->input->post('member_id',true)!=""?$this->input->post('member_id',true):"";
+            $limit = $this->input->post('limit',true)!=""?$this->input->post('limit',true):10;
+            $page = $this->input->post('page',true)!=""?$this->input->post('page',true):1;
+            $result = $this->Member_model->getRegisterData($member_id,$page,$limit);
+            $total_rows = $this->Member_model->getRegisterDataCount($member_id);
+            $pages = 1;
+            if(($total_rows%$limit)==0)
+            {
+               $pages = ($total_rows/$limit);
+            }else
+            {
+                $pages = intval($total_rows/$limit)+1;
+            }
+
+            ;
+            $this->response(['status'=>true,'data'=>['total_pages'=>$pages,'total_record'=>$total_rows,'current_page'=>$page,'data'=>$result],'msg'=>'successfully','response_code' => REST_Controller::HTTP_OK]);
         }catch(Exception $e)
         {
             $this->response(['status'=>false,'data'=>[],'msg'=>'something went wrong !','response_code' => REST_Controller::HTTP_INTERNAL_SERVER_ERROR]);
