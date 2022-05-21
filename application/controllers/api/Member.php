@@ -95,7 +95,7 @@ class Member extends REST_Controller
                   $dataArray['f_h_name'] = $this->input->post('f_h_name',true);
                   $dataArray['mobile_no'] = $this->input->post('mobile_no',true);
                   $dataArray['gender'] = $this->input->post('gender',true);
-                  $dataArray['sponsor_id'] = $dataArray['member_id'];
+                  $dataArray['sponsor_id'] = $this->input->post('sponsor_id',true);
                   $dataArray['password'] = md5($pass);
                   $dataArray['side'] = $this->input->post('side',true);
                   $dataArray['title'] = $this->input->post('title',true);
