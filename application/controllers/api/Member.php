@@ -202,7 +202,6 @@ class Member extends REST_Controller
                {
                   $dataArray=[];
                   $dataArray['name'] = $this->input->post('name',true);
-                  $dataArray['email_id'] = $this->input->post('email_id',true);
                   $dataArray['f_h_name'] = $this->input->post('f_h_name',true);
                   $dataArray['mobile_no'] = $this->input->post('mobile_no',true);
                   $dataArray['gender'] = $this->input->post('gender',true);
